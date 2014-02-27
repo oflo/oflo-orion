@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title>HANA Flo Development Environment</title>
+    <link rel="shortcut icon" href="favicon.ico" />
+
+    <!-- Dataflow Dependencies -->
+    <script src="./browser/meemoo-dataflow/libs/jquery.js"></script>
+    <script src="./browser/meemoo-dataflow/libs/jquery-ui.js"></script>
+    <script src="./browser/meemoo-dataflow/libs/jquery.ui.touch-punch.js"></script>
+    <script src="./browser/meemoo-dataflow/libs/underscore.js"></script>
+    <script src="./browser/meemoo-dataflow/libs/backbone.js"></script>
+    <script src="./browser/meemoo-dataflow/libs/hammer.min.js"></script>
+
+    <!-- NoFlo and NoFlo UI -->
+    <script src="./browser/oflo-ide.js"></script>
+
+    <!-- Dataflow Style -->
+    <link rel="stylesheet" href="./browser/meemoo-dataflow/build/default/dataflow.min.css">
+
+    <!-- NoFlo UI Style -->
+    <link rel="stylesheet" href="./css/oflo-ide.css">
+  </head>
+  <body>
+    <script type="text/template" id="dataflow-template">
+      <div class="dataflow"></div>
+    </script>
+    <script type="text/template" id="new-template">
+      <div class="noflo-ui-new">
+        <h1>Create new sketch</h2>
+        <form>
+          <label>
+            Graph name
+            <input type="text" id="name" placeholder="MyCoolGraph">
+          </label>
+          <label>
+            Type
+            <select name="type">
+              <option value="html">Browser</option>
+              <option value="websocket">Node.js</option>
+            </select>
+          </label>
+          <button id="create">Create</button>
+        </form>
+      </div>
+    </script>
+    <script type="text/template" id="main-template">
+      <div class="noflo-ui-main">
+        <h1>NoFlo Development Environment</h1>
+        <h2>Sketches</h2>
+        <a href="#new" class="btn">Create new</a>
+        <ul id="sketches"></ul>
+
+        <h2>Examples</h2>
+        <ul id="examples"></ul>
+      </div>
+    </script>
+    <script type="text/template" id="main-graph-element">
+      <a href="#graph/<%- name %>"><%- name %></a>
+    </script>
+    <div id="noflo-ui"></div>
+   
+    <script>
+    function getUrlValue(variable,context){
+      if(typeof context === 'undefined'){
+        context = window;
+      }
+      var searchString = context.location.search.substring(1);
+      var variableArray = searchString.split("&");
+      for (var i = 0; i < variableArray.length; i++) {
+        var keyValuePair = variableArray[i].split('=');
+        if(keyValuePair[0]===variable){
+          return keyValuePair[1];
+        }
+      };
+    }
+    window.onload = function () {
+      var noflo = require('noflo');
+      var Dataflow, dataflow, env;
+      Dataflow = require('/meemoo-dataflow').Dataflow;
+      require('oflo-ide/src/plugins/nofloLibrary');
+      require('oflo-ide/src/plugins/nofloGraph');
+      require('oflo-ide/src/plugins/nofloSettings');
+      require('oflo-ide/src/plugins/ofloSave');
+      //require('oflo-ide/src/plugins/preview');
+      dataflow = new Dataflow({
+        appendTo: $('.dataflow').get()[0]
+      });
+      
+      $.getJSON("test.json",function(data){
+        noflo.graph.loadJSON(data, function (graph) {
+          graph.baseDir = '/oflo-runtime-ui';
+          var Runtime = require('oflo-ide/src/runtimes/window');
+          var runtime = new Runtime(graph);
+          runtime.connect({
+            "ui":'/oflo-runtime-ui/index.html?hf-remote=true'
+          })
+          dataflow.plugins.nofloLibrary.registerGraph(graph, runtime);
+          dataflow.plugins.nofloGraph.registerGraph(graph, runtime);
+          dataflow.plugins.nofloSettings.registerGraph(graph, runtime);
+        });
+      }); 
+    
+    //this.runtime.setParentElement(dataflow.el);
+    //env = this.graph.properties.environment;
+    //dataflow.plugins.preview.setPreview(env, this.runtime);
+    
+  };
+
+ 
+    </script>
+  </body>
+</html>

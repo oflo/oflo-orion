@@ -1,0 +1,42 @@
+{
+  "name": "oflo-orion",
+  "description": "Integration of Eclipse Orion Node and the Noflo Development Environment",
+  "author": "Mo Unewisse <moune@web.de>",
+  "version": "0.0.1",
+  "private":true,
+  "licenses": [
+    
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/oflo/oflo-orion.git"
+  },
+  "engines": {
+    "node": ">=0.6.0"
+  },
+  "dependencies": {
+    "connect": "~2.4.6",
+    "node-inspector": "~0.2.0-beta3",
+    "sax": "~0.4.2",
+    "socket.io": "~0.9.11",
+    "socket.io-client": "~0.9.11",
+    "deferred-fs": ">=0.1.0",
+    "rimraf": "~2.1.4",
+     "orion":"*"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-coffee": "~0.6.6",
+    "grunt-coffeelint": "~0.0.6",
+    "chai": "~1.5.0",
+    "mocha": "~1.9.0",
+    "grunt-mocha-phantomjs": "~0.2.2",
+    "component-builder": "git://github.com/bergie/builder.js.git#patch-1",
+    "component": "~0.17.6",
+    "component-json": "~0.1.4",
+    "component-coffee": "~0.1.4",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-exec": "~0.4.2"
+   
+  }
+}
